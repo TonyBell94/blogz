@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <center>
+    <h1>Build a Blog!</h1>
+    </center>
+    <hr />
+    <ul>
+        {% for title in posts%}
+        <h2><a href="/posts"> {{title.name}}</a></h2>
+        <p >{{title.body}}</p>
+        <p name="p_id">{{title.id}}</p>
+        <input type="hidden" name="p_id" value="{{title.id}}" />
+
+        {%endfor%}
+    </ul>
+
+{% endblock %}
