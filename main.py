@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -6,6 +6,8 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:beproductive@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+
+app.secret_key = 'wtf'
 
 
 class Blog(db.Model):
@@ -21,36 +23,43 @@ class Blog(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    posts = Blog.query.all() 
+
+    posts = Blog.query.all()
+
     return render_template('displayBP.html', posts = posts)
 
 @app.route('/posts', methods=['POST','GET'])
 def posts():
 
-    entry_id = int(request.form['p_id'])
+    single_post_num = request.args.get('entry_id')
+    single_post = Blog.query.get(single_post_num)
 
-    entry = Blog.query.get(11)
-    return render_template('displayBP.html', entry=entry)
+    body = single_post.body
+    title = single_post.name
+
+    return render_template('posts.html', body=body, title=title)
 
 @app.route('/todos', methods=['POST', 'GET'])
 def display():
-
-    title_error = ''
 
     if request.method == 'POST':
 
         title = request.form['title']
         body = request.form['body']
-        print(title)
-        print(body)
-        if title == '' or body == '':
-            title_error = "Do not leave title or body empty"
-            return render_template('todos.html')
 
-        new_entry = Blog(title, body)
-        db.session.add(new_entry)
-        db.session.commit()
-        return redirect('/')
+        if title == '' or body == '':
+
+            flash("Do not leave title or body empty")
+
+            return render_template('todos.html')
+        else:
+            new_entry = Blog(title, body)
+            db.session.add(new_entry)
+            db.session.commit()
+
+            new_id = new_entry.id
+
+            return redirect('/posts?entry_id='+ str(new_id))
 
 
     return render_template('todos.html')

@@ -4,14 +4,23 @@
     <center>
     <h1>Write Something To Post In The God Damn Blog</h1>
     </center>
+    <hr />
     <style>
-        .error{color:red}
+        .error{
+            color:red
+        }
     </style>
+
     <form method='post'>
         <label>
             Title of your new Entry:<br>
-            <input type="text" name='title' value="{{error}}"/>
-            <span class="error" name="error">{{title_error}}</span>
+            <input type="text" name='title'/>
+            
+            {% with messages = get_flashed_messages() %}
+                {% for error in messages %}
+                    <p class='error'>{{error}}</p>
+                {% endfor %}
+            {% endwith %}
             
         </label>
         <br>
@@ -20,8 +29,13 @@
         <label>
             New Blog Post:<br>
             <textarea rows= "6" cols="60"type="text" name='body'></textarea>
-        </label><br>
-
+        </label>
+        {% with messages = get_flashed_messages() %}
+            {% for error in messages %}
+                <p class='error'>{{error}}</p>
+            {% endfor %}
+        {% endwith %}
+        <br>
         <input type="submit" value='submit' />
     </form>
 

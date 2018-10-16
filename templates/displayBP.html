@@ -6,14 +6,15 @@
     <h1>Build a Blog!</h1>
     </center>
     <hr />
-    <ul>
-        {% for title in posts%}
-        <h2><a href="/posts"> {{title.name}}</a></h2>
-        <p >{{title.body}}</p>
-        <p name="p_id">{{title.id}}</p>
-        <input type="hidden" name="p_id" value="{{title.id}}" />
+    <form action="/" method="GET">
+        <ul>
+            {% for title in posts%}
+            <h2><a href="/posts?entry_id={{title.id}}"> {{title.name}}</a></h2>
+            <p >{{title.body}}</p>
+            
+            <input type="hidden" name="entry_id" value="{{title.id}}" />
 
-        {%endfor%}
-    </ul>
-
+            {%endfor%}
+        </ul>
+    </form>
 {% endblock %}
