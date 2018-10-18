@@ -2,7 +2,13 @@
 <html>
     <head>
         <a href="/">Main Blog Page</a> &nbsp &nbsp &nbsp &nbsp <a href="/todos">Add a Blog Entry</a>
-        <title>{{title}}</title>
+        <title>{{title}}</title> &nbsp &nbsp &nbsp &nbsp
+        <a href="login">Login</a>
+        {% with messages = get_flashed_messages() %}
+        {% for error in messages %}
+            <p class='error'>{{error}}</p>
+        {% endfor %}
+        {% endwith %}
     </head>
 
 <body>
