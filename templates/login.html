@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<label for="Username">Username</label>
-<input id="Username" name="Username" type="text">
-<br>
-<label for="Password">Password</label>
-<input id="Password" name="Password"type="password">
-<br>
-<input type="submit" value='submit' />
+    <center>
+    <h1>Login</h1>
+    </center>
+    <hr>
+<form action="/login?Username&Password" method='POST'>
+    {% with messages = get_flashed_messages() %}
+    {% for error in messages %}
+        <p class='error'>{{error}}</p>
+    {% endfor %}
+    {% endwith %}
+    <label for="Username">Username</label>
+    <input id="Username" name="Username" type="text">
+    <br>
+    <label for="Password">Password</label>
+    <input id="Password" name="Password"type="password">
+    <br>
+    <input type="submit" value='Login' />
+    <br>
+    <a href="/createAccount">Create an Account</a>
 
+</form>
 {% endblock %}

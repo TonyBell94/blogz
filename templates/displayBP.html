@@ -1,20 +1,19 @@
-
 {% extends "base.html" %}
 
 {% block content %}
-    <center>
-    <h1>Build a Blog!</h1>
-    </center>
-    <hr />
-    <form action="/" method="GET">
-        <ul>
-            {% for title in posts%}
-            <h2><a href="/posts?entry_id={{title.id}}"> {{title.name}}</a></h2>
-            <p >{{title.body}}</p>
-            
-            <input type="hidden" name="entry_id" value="{{title.id}}" />
 
-            {%endfor%}
-        </ul>
-    </form>
+<h1>Blog users!</h1>
+<hr>
+<form action="/singleUser" method='GET'>
+{% for user in users%}
+    <ul>
+         <li>
+            
+            <a href="/singleUser?owner_id={{user.id}}">{{user.db_Username}}</a>
+            <input type="hidden" name = owner_id value='{{user.id}}'>
+        </li>   
+    </ul>
+
+{% endfor %}
+</form>
 {% endblock %}

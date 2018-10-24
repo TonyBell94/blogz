@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <h2> {{title}}</h2>
+    <p >{{body}}</p>
+
+    <input type="hidden" name="entry_id" value="{{title.id}}" />
+   
+
+{% endblock %}
