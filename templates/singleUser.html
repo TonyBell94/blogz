@@ -9,11 +9,11 @@
         <ul>
                 {% for title in posts%}
 
-                <h2><a href="/posts?entry_id={{title.id}}"> {{title.name}}</a></h2>
+                <h2><a href="/posts?entry_id={{title.id}}&owner_id={{title.owner_id}}"> {{title.name}}</a></h2>
                 <p >{{title.body}}</p>
                 
                 <input type="hidden" name="entry_id" value="{{title.id}}" />
-    
+                <input type="hidden" name="owner_id" value="{{title.owner_id}}" />
                 {%endfor%}
         </ul>
     </form>

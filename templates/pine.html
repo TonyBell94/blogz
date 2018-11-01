@@ -1,0 +1,6 @@
+{% for post in all_posts %}
+
+<h2> <a href="/posts?entry_id={{post[4]}}&owner_id={{post[3]}}">{{post[1]}}</a></h2>
+<p>{{post[2]}}</p>
+<p>writen by: <a href="/singleUser?owner_id={{post[3]}}">{{post[0]}}</a></p>
+{% endfor %}

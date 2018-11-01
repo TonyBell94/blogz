@@ -40,19 +40,37 @@ def require_login():
     if request.endpoint not in allowed_routes and 'Username' not in session:
         return redirect('/login')
 
-@app.route('/allPosts')
+@app.route('/allPosts', methods=['GET', 'POST'])
 def allPosts():
-    posts = Blog.query.all()
-    return render_template('posts.html', posts=posts)
 
+    posts = Blog.query.all()
+    account = Account.query.all()
+    all_posts = list()
+    for post in posts:
+        entry_id = post.id
+        owner_id = post.owner_id
+        user = Account.query.get(owner_id)
+
+        title = post.name
+        body = post.body
+        username = user.db_Username
+
+        all_posts.append((username,title,body,owner_id,entry_id))
+
+    return render_template('posts.html', all_posts=all_posts)
+    #names = Account.query.filter_by(id=owner_id).first()
+
+    #print(names)
+    #u_name = Account.query.get(name_num)
+    
+    
+    #return render_template('posts.html', posts=posts, account=account, names=names,num_list=num_list)
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
     users = Account.query.all()
-    for user in users:
-        print(user.db_Username)
-    posts = Blog.query.all()
-
+    #posts = Blog.query.all()
+    
     return render_template('displayBP.html', users = users)
 
 
@@ -61,21 +79,30 @@ def singleUser():
     if request.method == 'GET':
         value = request.args.get('owner_id')
         posts = Blog.query.filter_by(owner_id=value)
+        
         return render_template('singleUser.html', posts=posts)
     return render_template('singleUser.html')
 
 
 @app.route('/posts', methods=['POST','GET'])
 def posts():
+    if request.method == 'POST':
 
-    single_post_num = request.args.get('entry_id')
-    print(single_post_num)
-    single_post = Blog.query.get(single_post_num)
-    print(single_post)
-    body = single_post.body
-    title = single_post.name
-    print(body)
-    return render_template('post.html', body=body, title=title)
+        return render_template('post.html')
+
+    elif request.method == 'GET':
+
+        single_post_num = request.args.get('entry_id')
+        user_name_num = request.args.get('owner_id')
+
+        single_post = Blog.query.get(single_post_num)
+        user_name_A = Account.query.get(user_name_num)
+
+        user_name = user_name_A.db_Username
+        body = single_post.body
+        title = single_post.name
+
+        return render_template('post.html', body=body, title=title, user_name=user_name, single_post=single_post)
 
 @app.route('/todos', methods=['POST', 'GET'])
 
@@ -88,8 +115,6 @@ def display():
         body = request.form['body']
         owner = Account.query.filter_by(db_Username=session['Username']).first()
         print(owner)
-        print(title)
-        print(body)
         if title == '' or body == '':
 
             flash("Do not leave title or body empty")
@@ -100,10 +125,11 @@ def display():
             db.session.add(new_entry)
             db.session.commit()
 
-
+            owner_id = new_entry.owner_id
             new_id = new_entry.id
-
-            return redirect('/posts?entry_id='+ str(new_id))
+            print('fucker')
+            print(new_id)
+            return redirect('/posts?entry_id='+ str(new_id)+'&owner_id='+str(owner_id))
 
 
     return render_template('todos.html')
